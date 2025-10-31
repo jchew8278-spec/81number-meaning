@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数字能量解说查询系统</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      font-size: 24px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 5px;
+      cursor: pointer;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #005ea0;
+    }
+    .result {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .title {
+      font-weight: bold;
+      color: #0078d7;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>数字能量解说查询系统</h1>
+  <input id="num" type="text" placeholder="请输入数字，如112" />
+  <button onclick="search()">查询</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    async function search() {
+      const num = document.getElementById("num").value.trim();
+      if (!num) {
+        alert("请输入数字！");
+        return;
+      }
+      try {
+        const response = await fetch("81number_meaning_full.json");
+        const data = await response.json();
+        const item = data[num];
+        if (item) {
+          document.getElementById("result").innerHTML = `
+            <div class="section"><div class="title">【正面】</div>${item.positive}</div>
+            <div class="section"><div class="title">【负面】</div>${item.negative}</div>
+            <div class="section"><div class="title">【解说】</div>${item.comment}</div>
+          `;
+        } else {
+          document.getElementById("result").innerHTML = "<p>未找到该数字的解说，请确认输入是否正确。</p>";
+        }
+      } catch (error) {
+        document.getElementById("result").innerHTML = "<p>⚠️ 数据加载失败，请确认 JSON 文件是否存在。</p>";
+      }
+    }
+  </script>
+</body>
+</html>
